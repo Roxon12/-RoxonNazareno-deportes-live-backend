@@ -9,12 +9,12 @@ exports.handler = async function(event, context) {
         };
     }
 
-    const response = await fetch('https://api.football-api.com/v2/matches', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${apiKey}`,  // Usando la clave de API
-        }
-    });
+const response = await fetch('https://api.football-api.com/v2/matches', {
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer 63e9798f582dde9c9cc2dc00ba634a42', // Tu API key
+    }
+});
 
     const data = await response.json();
 
