@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions" # Esta es la carpeta donde estarán tus funciones de backend
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
