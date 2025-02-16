@@ -7,9 +7,9 @@ const EventList = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch('/.netlify/functions/get-events');  // URL de la función de Netlify
+                const response = await fetch('/.netlify/functions/get-events');  // Llamada a la función de Netlify
                 const data = await response.json();
-                setEvents(data.matches);  // Suponiendo que 'matches' es el array con los eventos
+                setEvents(data.response || []);  // Asegúrate de que 'response' es el array de eventos devuelto por la API
             } catch (err) {
                 setError('Error al cargar los eventos.');
             }
@@ -24,9 +24,15 @@ const EventList = () => {
         <div>
             <h1>Eventos de Fútbol</h1>
             <ul>
-                {events.map(event => (
-                    <li key={event.id}>{event.homeTeam.name} vs {event.awayTeam.name}</li>
-                ))}
+                {events.length > 0 ? (
+                    events.map(event => (
+                        <li key={event.fixture.id}>
+                            {event.homeTeam.team.name} vs {event.awayTeam.team.name}
+                        </li>
+                    ))
+                ) : (
+                    <p>No se encontraron eventos.</p>
+                )}
             </ul>
         </div>
     );
