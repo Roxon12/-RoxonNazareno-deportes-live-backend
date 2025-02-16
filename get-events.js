@@ -9,7 +9,7 @@ exports.handler = async function(event, context) {
         };
     }
 
-const response = await fetch('https://api.football-api.com/v2/matches', {
+const response = await fetch('https://v3.football.api-sports.io/', {
     method: 'GET',
     headers: {
         'Authorization': 'Bearer 63e9798f582dde9c9cc2dc00ba634a42', // Tu API key
