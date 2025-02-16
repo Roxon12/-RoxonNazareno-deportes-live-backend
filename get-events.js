@@ -1,38 +1,22 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // Asegúrate de tener instalado 'node-fetch'
 
 exports.handler = async function(event, context) {
-    const apiKey = process.env.FOOTBALL_API_KEY;  // Accede a la variable de entorno
-    if (!apiKey) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'API key missing' })
-        };
-    }
+    try {
+        const response = await fetch('https://v3.football.api-sports.io/fixtures', {
+            method: 'GET',
+            headers: {
+                'x-apisports-key': process.env.FOOTBALL_API_KEY, // Usamos la clave de API desde las variables de entorno
+            }
+        });
 
-const response = await fetch('https://v3.football.api-sports.io/fixtures', {
-    method: 'GET',
-    headers: {
-        'Authorization': 'Bearer 63e9798f582dde9c9cc2dc00ba634a42', // Tu API key
-    }
-});
+        if (!response.ok) {
+            throw new Error(`Error al obtener los eventos: ${response.statusText}`);
+        }
 
- const data = await response.json();
+        const data = await response.json(); // Suponiendo que la respuesta es un objeto JSON
         return {
             statusCode: 200,
-            body: JSON.stringify(data)
-        };
-    } catch (error) {
-        console.error('Error al cargar los eventos:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'Hubo un error al cargar los eventos. Intenta más tarde.' })
-        };
-    }
-};
-const data = await response.json();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(data)
+            body: JSON.stringify(data) // Devolvemos los datos de los eventos
         };
     } catch (error) {
         console.error('Error al cargar los eventos:', error);
