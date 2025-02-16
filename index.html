@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ligas del Mundo Peluche Star</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        #events-list {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .event-bar {
+            min-width: 250px;
+            padding: 15px;
+            margin-right: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-align: center;
+        }
+        .event-bar:hover {
+            background-color: #f0f0f0;
+        }
+        .event-bar h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        #event-detail {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .link {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ligas del Mundo Peluche Star</h1>
+
+        <!-- Barra de eventos -->
+        <div id="events-list">
+            <!-- Los eventos se cargarán aquí -->
+        </div>
+
+        <!-- Detalles del evento seleccionado -->
+        <div id="event-detail">
+            <!-- Los detalles del evento se mostrarán aquí -->
+        </div>
+    </div>
+
+    <script>
+        // Función para obtener los eventos desde la API
+        async function loadEvents() {
+            try {
+                // Usar la URL correcta dependiendo del entorno (local o producción)
+                const apiUrl = window.location.hostname === "localhost" ? "http://localhost:5000/events" : "https://tu-backend-url.com/events";
+                
+                // Realizar la solicitud fetch
+                const response = await fetch(apiUrl);
+
+                // Verificar si la respuesta es exitosa
+                if (!response.ok) {
+                    throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
+                }
+
+                const events = await response.json();
+                console.log('Eventos recibidos:', events); // Verifica en la consola si los datos son correctos
+
+                const eventsList = document.getElementById('events-list');
+                eventsList.innerHTML = ''; // Limpiar cualquier contenido previo
+
+                // Recorrer los eventos y mostrarlos
+                events.forEach(event => {
+                    const eventBar = document.createElement('div');
+                    eventBar.classList.add('event-bar');
+
+                    eventBar.innerHTML = `
+                        <h3>${event.match}</h3>
+                        <p><strong>Hora:</strong> ${new Date(event.time).toLocaleString()}</p>
+                        <p><strong>Duración:</strong> ${event.duration}</p>
+                        <p><strong>Liga:</strong> ${event.league}</p>
+                        <p><strong>País:</strong> ${event.country}</p>
+                    `;
+
+                    // Agregar evento al hacer clic en el partido
+                    eventBar.addEventListener('click', () => {
+                        showEventDetail(event);
+                    });
+
+                    eventsList.appendChild(eventBar);
+                });
+            } catch (error) {
+                console.error('Error al cargar los eventos:', error);
+                alert("Hubo un error al cargar los eventos. Intenta más tarde.");
+            }
+        }
+
+        // Función para mostrar los detalles del evento seleccionado
+        function showEventDetail(event) {
+            const eventDetail = document.getElementById('event-detail');
+            eventDetail.innerHTML = `
+                <h2>${event.match}</h2>
+                <p><strong>Deporte:</strong> ${event.sport}</p>
+                <p><strong>Liga:</strong> ${event.league}</p>
+                <p><strong>Hora:</strong> ${new Date(event.time).toLocaleString()}</p>
+                <p><strong>Duración:</strong> ${event.duration}</p>
+                <p><strong>País:</strong> ${event.country}</p>
+                <p><strong>Ver en vivo:</strong> <a href="${event.stream_links[0]}" class="link" target="_blank">Ver evento</a></p>
+            `;
+        }
+
+        // Cargar los eventos cuando se cargue la página
+        window.onload = loadEvents;
+    </script>
+
+</body>
+</html>
