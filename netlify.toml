@@ -1,7 +1,2 @@
-/project-root
-├── /netlify
-│   └── /functions
-│       └── get-events.js
-├── /public
-├── /src
-└── netlify.toml
+[build]
+functions = "netlify/functions"
